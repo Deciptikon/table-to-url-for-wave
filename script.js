@@ -1,3 +1,5 @@
+const precision = 5;
+
 const baseURL = "https://deciptikon.github.io/WaveJS/";
 
 const defaultData = {
@@ -156,7 +158,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const data = defaultData;
 
-    //включить в новые данные...
+    data.S = s.replaceAll(",", ".");
+
+    const a = Number(A.replaceAll(",", "."));
+    if (isNaN(a)) {
+      alert("Амплитуда колебаний должна быть корректной!");
+      return;
+    }
+    data.Amplutuda = (a / 100).toFixed(precision);
+
+    if (isNaN(Number(F.replaceAll(",", ".")))) {
+      alert("Частота колебаний должна быть корректной!");
+      return;
+    }
+    if (isNaN(Number(n.replaceAll(",", ".")))) {
+      alert("Частота вращения должна быть корректной!");
+      return;
+    }
+    if (Number(n.replaceAll(",", ".")) <= 0) {
+      alert("Частота вращения должна быть строго больше нуля!");
+      return;
+    }
+
+    // частота относительных колебаний
+    const f = Number(F.replaceAll(",", ".")) / Number(n.replaceAll(",", "."));
+
+    if (!isFinite(f)) {
+      alert("Относительная частота бесконечна!");
+      return;
+    }
+
+    // разделяем на целую (chi) и дробную (psi) части
+    const chi = Math.floor(f);
+    const psi = f - chi;
+
+    data.Chi = chi;
+    data.Psi = psi.toFixed(precision);
 
     const url = urlFromData(baseURL, data);
     return url;
