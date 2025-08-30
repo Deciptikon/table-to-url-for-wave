@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const cell = document.createElement("td");
       const input = document.createElement("input");
       input.type = "text";
-      input.placeholder = `Значение ${i + 1}`;
+      input.placeholder = `Введите число`;
       cell.appendChild(input);
       row.appendChild(cell);
     }
@@ -144,8 +144,6 @@ document.addEventListener("DOMContentLoaded", function () {
     defaultOrder.forEach((key) => {
       url += `${key}=${data[key]}&`;
     });
-    console.log(url);
-
     return url.slice(0, -1);
   }
 
@@ -153,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const [s, A, F, n] = rowData;
 
     if (!s && !A && !F && !n) {
-      return urlFromData(baseURL, defaultData);
+      return baseURL;
     }
 
     const data = defaultData;
@@ -161,7 +159,6 @@ document.addEventListener("DOMContentLoaded", function () {
     //включить в новые данные...
 
     const url = urlFromData(baseURL, data);
-    console.log(url);
     return url;
   }
 });
