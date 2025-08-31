@@ -195,6 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const [width, height, x0, y0, scale, alfa, betta, gamma, ro] = commonParams;
 
     if (!s && !A && !F && !n) {
+      alert("Уникальные параметры отсутствуют! Сгенерирована пустая ссылка.");
       return baseURL;
     }
 
