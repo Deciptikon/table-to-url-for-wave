@@ -224,21 +224,23 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     data.Y0 = y0.replaceAll(",", ".");
 
-    if (!isValid(scale, { min: 0, max: 1 })) {
+    if (!isValid(scale, { min: 0, max: 5 })) {
       alert("Масштаб должен быть корректным!");
       return;
     }
     data.Scale = scale.replaceAll(",", ".");
 
     if (!isValid(alfa, { min: 0, max: 90 })) {
-      alert("Угол наклона главной режущей кромки должен быть корректным!");
+      alert(
+        "Угол наклона главной режущей кромки (Alfa) должен быть корректным!"
+      );
       return;
     }
     data.Alfa = num(toRadians(Number(alfa.replaceAll(",", "."))));
 
     if (!isValid(betta, { min: 0, max: 90 })) {
       alert(
-        "Угол наклона вспомогательной режущей кромки должен быть корректным!"
+        "Угол наклона вспомогательной режущей кромки (Betta) должен быть корректным!"
       );
       return;
     }
@@ -246,14 +248,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!isValid(gamma, { min: -90, max: 90 })) {
       alert(
-        "Угол наклона резца относительно поверхности обработки должен быть корректным!"
+        "Угол наклона резца относительно поверхности обработки (Gamma) должен быть корректным!"
       );
       return;
     }
     data.Gamma = num(toRadians(Number(gamma.replaceAll(",", "."))));
 
     if (!isValid(ro, { min: 0, max: 10 })) {
-      alert("Радиус скругления вершины резца должен быть корректным!");
+      alert("Радиус скругления вершины резца (Ro) должен быть корректным!");
       return;
     }
     data.Ro = ro.replaceAll(",", ".");
