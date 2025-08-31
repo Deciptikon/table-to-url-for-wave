@@ -149,8 +149,50 @@ document.addEventListener("DOMContentLoaded", function () {
     return url.slice(0, -1);
   }
 
+  function toRadians(gradus) {
+    return (Math.PI * gradus) / 180;
+  }
+
+  function num(n, precision = 5) {
+    return Number.parseFloat(Number(n).toFixed(precision)).toString();
+  }
+
+  function isValid(str, options = {}) {
+    if (!str || typeof str !== "string" || str.trim() === "") {
+      return false;
+    }
+
+    const trimmedStr = str.trim().replaceAll(",", ".");
+
+    if (isNaN(trimmedStr) || trimmedStr === "" || isNaN(Number(trimmedStr))) {
+      return false;
+    }
+
+    const num = Number(trimmedStr);
+
+    if (options.integer && !Number.isInteger(num)) {
+      return false;
+    }
+
+    if (options.min !== undefined && num < options.min) {
+      return false;
+    }
+
+    if (options.max !== undefined && num > options.max) {
+      return false;
+    }
+
+    return true;
+  }
+
   function generateUrl(rowData) {
+    const commonInputs = document.querySelectorAll(
+      "#common-params-table input"
+    );
+    const commonParams = Array.from(commonInputs).map((input) => input.value);
+
     const [s, A, F, n] = rowData;
+    const [width, height, x0, y0, scale, alfa, betta, gamma, ro] = commonParams;
 
     if (!s && !A && !F && !n) {
       return baseURL;
@@ -158,25 +200,82 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const data = defaultData;
 
+    if (!isValid(width, { integer: true, min: 100, max: 1080 })) {
+      alert("Ширина холста должна быть корректной!");
+      return;
+    }
+    data.Width = width.replaceAll(",", ".");
+
+    if (!isValid(height, { integer: true, min: 100, max: 1080 })) {
+      alert("Высота холста должна быть корректной!");
+      return;
+    }
+    data.Height = height.replaceAll(",", ".");
+
+    if (!isValid(x0)) {
+      alert("Смещение по горизонтали должно быть корректным!");
+      return;
+    }
+    data.X0 = x0.replaceAll(",", ".");
+
+    if (!isValid(y0)) {
+      alert("Смещение по вертикали должно быть корректным!");
+      return;
+    }
+    data.Y0 = y0.replaceAll(",", ".");
+
+    if (!isValid(scale, { min: 0, max: 1 })) {
+      alert("Масштаб должен быть корректным!");
+      return;
+    }
+    data.Scale = scale.replaceAll(",", ".");
+
+    if (!isValid(alfa, { min: 0, max: 90 })) {
+      alert("Угол наклона главной режущей кромки должен быть корректным!");
+      return;
+    }
+    data.Alfa = num(toRadians(Number(alfa.replaceAll(",", "."))));
+
+    if (!isValid(betta, { min: 0, max: 90 })) {
+      alert(
+        "Угол наклона вспомогательной режущей кромки должен быть корректным!"
+      );
+      return;
+    }
+    data.Betta = num(toRadians(Number(betta.replaceAll(",", "."))));
+
+    if (!isValid(gamma, { min: -90, max: 90 })) {
+      alert(
+        "Угол наклона резца относительно поверхности обработки должен быть корректным!"
+      );
+      return;
+    }
+    data.Gamma = num(toRadians(Number(gamma.replaceAll(",", "."))));
+
+    if (!isValid(ro, { min: 0, max: 10 })) {
+      alert("Радиус скругления вершины резца должен быть корректным!");
+      return;
+    }
+    data.Ro = ro.replaceAll(",", ".");
+
+    if (!isValid(s, { min: 0, max: 10 })) {
+      alert("Подача должна быть корректной!");
+      return;
+    }
     data.S = s.replaceAll(",", ".");
 
-    const a = Number(A.replaceAll(",", "."));
-    if (isNaN(a)) {
+    if (!isValid(A, { min: 0, max: 100000 })) {
       alert("Амплитуда колебаний должна быть корректной!");
       return;
     }
-    data.Amplutuda = (a / 100).toFixed(precision);
+    data.Amplutuda = num(Number(A.replaceAll(",", ".")) / 100);
 
-    if (isNaN(Number(F.replaceAll(",", ".")))) {
+    if (!isValid(F, { min: 0, max: 100000 })) {
       alert("Частота колебаний должна быть корректной!");
       return;
     }
-    if (isNaN(Number(n.replaceAll(",", ".")))) {
+    if (!isValid(n, { min: 0, max: 100000 })) {
       alert("Частота вращения должна быть корректной!");
-      return;
-    }
-    if (Number(n.replaceAll(",", ".")) <= 0) {
-      alert("Частота вращения должна быть строго больше нуля!");
       return;
     }
 
@@ -192,8 +291,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const chi = Math.floor(f);
     const psi = f - chi;
 
-    data.Chi = chi;
-    data.Psi = psi.toFixed(precision);
+    data.Chi = num(chi);
+    data.Psi = num(Math.max(psi, 0.00001));
 
     const url = urlFromData(baseURL, data);
     return url;
