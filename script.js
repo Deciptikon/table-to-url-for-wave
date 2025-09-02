@@ -237,7 +237,9 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       return;
     }
-    data.Alfa = num(toRadians(Number(alfa.replaceAll(",", "."))));
+    let al = Number(alfa.replaceAll(",", "."));
+    if (90 - al < 0.01) al = 90 - 0.01;
+    data.Alfa = num(toRadians(al));
 
     if (!isValid(betta, { min: 0, max: 90 })) {
       alert(
@@ -245,7 +247,9 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       return;
     }
-    data.Betta = num(toRadians(Number(betta.replaceAll(",", "."))));
+    let be = Number(betta.replaceAll(",", "."));
+    if (90 - be < 0.01) be = 90 - 0.01;
+    data.Betta = num(toRadians(be));
 
     if (!isValid(gamma, { min: -90, max: 90 })) {
       alert(
